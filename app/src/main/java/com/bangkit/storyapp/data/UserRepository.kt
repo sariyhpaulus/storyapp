@@ -5,7 +5,9 @@ import com.bangkit.storyapp.data.api.LoginResponse
 import com.bangkit.storyapp.data.api.RegisterResponse
 import com.bangkit.storyapp.data.pref.UserModel
 import com.bangkit.storyapp.data.pref.UserPreference
+import com.bangkit.storyapp.utils.parseErrorMessage
 import kotlinx.coroutines.flow.Flow
+import retrofit2.HttpException
 
 class UserRepository private constructor(
     private val userPreference: UserPreference,
@@ -13,7 +15,19 @@ class UserRepository private constructor(
 ) {
 
     suspend fun register(name: String, email: String, password: String): RegisterResponse {
-        return apiService.register(name, email, password)
+        return try {
+            val response = apiService.register(name, email, password)
+            if (response.error == false) {
+                response
+            } else {
+                throw Exception(response.message ?: "An unknown error occurred")
+            }
+        } catch (e: HttpException) {
+            val errorMessage = parseErrorMessage(e)
+            throw Exception(errorMessage)
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
     suspend fun login(email: String, password: String): LoginResponse {

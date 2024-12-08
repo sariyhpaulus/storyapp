@@ -8,11 +8,10 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.bangkit.storyapp.R
-import com.bangkit.storyapp.data.pref.UserModel
 import com.bangkit.storyapp.databinding.ActivityLoginBinding
 import com.bangkit.storyapp.view.ViewModelFactory
 import com.bangkit.storyapp.view.main.MainActivity
@@ -21,7 +20,6 @@ class LoginActivity : AppCompatActivity() {
     private val viewModel by viewModels<LoginViewModel> {
         ViewModelFactory.getInstance(this)
     }
-
     private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +30,7 @@ class LoginActivity : AppCompatActivity() {
         setupView()
         setupAction()
         playAnimation()
+        observeLoginResult()
     }
 
     private fun setupView() {
@@ -49,20 +48,44 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupAction() {
         binding.loginButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
-            viewModel.saveSession(UserModel(email, "sample_token"))
-            AlertDialog.Builder(this).apply {
-                setTitle("Yeah!")
-                setMessage("Anda berhasil login")
-                setPositiveButton("Lanjut") { _, _ ->
-                    val intent = Intent(context, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                    finish()
+            val email = binding.emailEditText.text.toString().trim()
+            val password = binding.passwordEditText.text.toString().trim()
+
+            viewModel.login(email, password)
+        }
+    }
+
+    private fun observeLoginResult() {
+        viewModel.isLoading.observe(this) { isLoading ->
+            binding.loginButton.isEnabled = !isLoading
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
+        viewModel.loginResult.observe(this) { result ->
+            result.onSuccess { response ->
+                if (response.error == false && response.loginResult != null) {
+                    showSuccessDialog(response.loginResult.name ?: "Pengguna")
+                } else {
+                    Toast.makeText(this, response.message ?: "Login Gagal", Toast.LENGTH_SHORT).show()
                 }
-                create()
-                show()
+            }.onFailure { error ->
+                Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun showSuccessDialog(name: String) {
+        AlertDialog.Builder(this).apply {
+            setTitle("Login Berhasil")
+            setMessage("Selamat datang, $name!")
+            setPositiveButton("Lanjut") { _, _ ->
+                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                finish()
+            }
+            create()
+            show()
         }
     }
 

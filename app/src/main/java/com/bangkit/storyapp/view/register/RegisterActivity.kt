@@ -9,20 +9,20 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
-import com.bangkit.storyapp.R
-import com.bangkit.storyapp.data.api.ApiConfig
 import com.bangkit.storyapp.databinding.ActivityRegisterBinding
+import com.bangkit.storyapp.utils.parseErrorMessage
+import com.bangkit.storyapp.view.ViewModelFactory
 import com.bangkit.storyapp.view.login.LoginActivity
+import retrofit2.HttpException
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
-    private lateinit var registerViewModel: RegisterViewModel
+    private val registerViewModel by viewModels<RegisterViewModel> {
+        ViewModelFactory.getInstance(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +31,6 @@ class RegisterActivity : AppCompatActivity() {
 
         setupView()
         playAnimation()
-
-        val apiService = ApiConfig.getApiService()
-        registerViewModel = ViewModelProvider(
-            this,
-            RegisterViewModelFactory(apiService)
-        )[RegisterViewModel::class.java]
-
         setupAction()
         observeRegisterResult()
     }
@@ -66,6 +59,10 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun observeRegisterResult() {
+        registerViewModel.isLoading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
         registerViewModel.registerResult.observe(this) { result ->
             result.onSuccess { response ->
                 if (response.error == false) {
@@ -74,7 +71,12 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.makeText(this, response.message ?: "Registrasi Gagal", Toast.LENGTH_SHORT).show()
                 }
             }.onFailure { error ->
-                Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+                val errorMessage = if (error is HttpException) {
+                    parseErrorMessage(error)
+                } else {
+                    error.message ?: "Terjadi kesalahan"
+                }
+                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
             }
         }
     }

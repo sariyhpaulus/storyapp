@@ -5,15 +5,11 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowManager
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.bangkit.storyapp.R
 import com.bangkit.storyapp.databinding.ActivityMainBinding
 import com.bangkit.storyapp.view.ViewModelFactory
-import com.bangkit.storyapp.view.home.HomeActivity
+import com.bangkit.storyapp.view.landing.LandingPageActivity
 
 class MainActivity : AppCompatActivity() {
     private val viewModel by viewModels<MainViewModel> {
@@ -28,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.getSession().observe(this) { user ->
             if (!user.isLogin) {
-                startActivity(Intent(this, HomeActivity::class.java))
+                startActivity(Intent(this, LandingPageActivity::class.java))
                 finish()
             }
         }
