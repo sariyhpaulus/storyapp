@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.bangkit.storyapp.R
 import com.bangkit.storyapp.databinding.ActivityHomeBinding
 import com.bangkit.storyapp.view.login.LoginActivity
+import com.bangkit.storyapp.view.register.RegisterActivity
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
@@ -48,7 +49,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         binding.signupButton.setOnClickListener {
-//            startActivity(Intent(this, SignupActivity::class.java))
+            startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
 
