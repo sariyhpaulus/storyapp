@@ -2,31 +2,44 @@ package com.bangkit.storyapp.view.register
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import com.bangkit.storyapp.R
+import com.bangkit.storyapp.data.api.ApiConfig
 import com.bangkit.storyapp.databinding.ActivityRegisterBinding
+import com.bangkit.storyapp.view.login.LoginActivity
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
+    private lateinit var registerViewModel: RegisterViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         setupView()
-        setupAction()
         playAnimation()
+
+        val apiService = ApiConfig.getApiService()
+        registerViewModel = ViewModelProvider(
+            this,
+            RegisterViewModelFactory(apiService)
+        )[RegisterViewModel::class.java]
+
+        setupAction()
+        observeRegisterResult()
     }
 
     private fun setupView() {
@@ -44,17 +57,40 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun setupAction() {
         binding.signupButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
+            val name = binding.nameEditText.text.toString().trim()
+            val email = binding.emailEditText.text.toString().trim()
+            val password = binding.passwordEditText.text.toString().trim()
 
-            AlertDialog.Builder(this).apply {
-                setTitle("Yeah!")
-                setMessage("Akun dengan $email sudah jadi nih. Silakan login ya!")
-                setPositiveButton("Lanjut") { _, _ ->
-                    finish()
+            registerViewModel.register(name, email, password)
+        }
+    }
+
+    private fun observeRegisterResult() {
+        registerViewModel.registerResult.observe(this) { result ->
+            result.onSuccess { response ->
+                if (response.error == false) {
+                    showSuccessDialog(binding.emailEditText.text.toString())
+                } else {
+                    Toast.makeText(this, response.message ?: "Registrasi Gagal", Toast.LENGTH_SHORT).show()
                 }
-                create()
-                show()
+            }.onFailure { error ->
+                Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun showSuccessDialog(toString: String) {
+        AlertDialog.Builder(this).apply {
+            setTitle("Registrasi Berhasil")
+            setMessage("Akun Anda telah berhasil dibuat. Silakan login!")
+            setPositiveButton("Login") { _, _ ->
+                val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                finish()
+            }
+            create()
+            show()
         }
     }
 
