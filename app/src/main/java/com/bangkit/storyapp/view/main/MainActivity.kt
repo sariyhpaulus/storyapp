@@ -42,6 +42,8 @@ class MainActivity : AppCompatActivity(), LogoutCallback {
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home,
+                R.id.navigation_add_story,
+                R.id.navigation_setting
             )
         )
 
@@ -51,6 +53,7 @@ class MainActivity : AppCompatActivity(), LogoutCallback {
         navController.addOnDestinationChangedListener{ _, destination, _ ->
             val title = when (destination.id) {
                 R.id.navigation_home -> getString(R.string.title_home)
+                R.id.navigation_add_story -> getString(R.string.title_add)
                 R.id.navigation_setting -> getString(R.string.title_setting)
                 else -> getString(R.string.app_name)
             }

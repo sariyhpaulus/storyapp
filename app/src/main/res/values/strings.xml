@@ -18,4 +18,12 @@
     <string name="title_setting">Pengaturan</string>
     <string name="set_language">Bahasa</string>
     <string name="change_language">Ubah tampilan bahasa</string>
+    <string name="upload">Unggah</string>
+    <string name="gallery">Galeri</string>
+    <string name="camera">Kamera</string>
+    <string name="description">Deskripsi gambar</string>
+    <string name="empty_image_warning">Silakan masukkan berkas gambar terlebih dahulu</string>
+    <string name="empty_description_warning">Silakan masukkan deskripsi gambar terlebih dahulu</string>
+    <string name="upload_success">Unggah story berhasil!</string>
+    <string name="upload_error">Unggah story gagal!</string>
 </resources>

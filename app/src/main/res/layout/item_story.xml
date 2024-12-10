@@ -14,7 +14,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/img_story"
+            android:id="@+id/iv_item_photo"
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
@@ -27,7 +27,7 @@
             tools:srcCompat="@tools:sample/backgrounds/scenic"/>
 
         <TextView
-            android:id="@+id/tv_story_name"
+            android:id="@+id/tv_item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="16dp"
@@ -36,7 +36,7 @@
             android:textStyle="bold"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toEndOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@id/img_story"
+            card_view:layout_constraintTop_toBottomOf="@id/iv_item_photo"
             tools:text="Name" />
 
         <TextView
@@ -49,7 +49,7 @@
             android:textSize="14sp"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toEndOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@id/tv_story_name"
+            card_view:layout_constraintTop_toBottomOf="@id/tv_item_name"
             tools:text="Description" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,14 +19,13 @@ class HomeViewModel(
 
     fun getStoriesWithToken() {
         viewModelScope.launch {
-            storyRepository.getSession().collect { user ->
-                fetchListStory(user.token)
-                Log.d("HomeViewModel", "getStoriesWithToken: ${user.token}")
+            storyRepository.getSession().collect {
+                fetchListStory()
             }
         }
     }
 
-    private fun fetchListStory(token: String) {
+    private fun fetchListStory() {
         viewModelScope.launch {
             _isLoading.value = true
             try {

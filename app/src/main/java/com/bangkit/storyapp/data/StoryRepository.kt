@@ -1,5 +1,6 @@
 package com.bangkit.storyapp.data
 
+import com.bangkit.storyapp.data.api.AddStoryResponse
 import com.bangkit.storyapp.data.api.ApiService
 import com.bangkit.storyapp.data.api.LoginResponse
 import com.bangkit.storyapp.data.api.RegisterResponse
@@ -8,6 +9,8 @@ import com.bangkit.storyapp.data.pref.UserModel
 import com.bangkit.storyapp.data.pref.UserPreference
 import com.bangkit.storyapp.utils.parseErrorMessage
 import kotlinx.coroutines.flow.Flow
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.HttpException
 
 class StoryRepository private constructor(
@@ -50,6 +53,22 @@ class StoryRepository private constructor(
     suspend fun getStories(): StoryResponse {
         return try {
             apiService.getStories()
+        } catch (e: HttpException) {
+            val errorMessage = parseErrorMessage(e)
+            throw Exception(errorMessage)
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    suspend fun addStory(
+        description: RequestBody,
+        image: MultipartBody.Part,
+        lat: Float?,
+        lon: Float?
+    ): AddStoryResponse {
+        return try {
+            apiService.addStory(description, image, lat, lon)
         } catch (e: HttpException) {
             val errorMessage = parseErrorMessage(e)
             throw Exception(errorMessage)

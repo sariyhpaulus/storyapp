@@ -36,7 +36,7 @@ class SettingsFragment : Fragment() {
         val binding = FragmentSettingsBinding.bind(view)
         _binding = binding
 
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+//        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         setupAction()
     }

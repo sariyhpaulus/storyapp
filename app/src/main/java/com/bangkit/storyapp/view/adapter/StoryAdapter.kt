@@ -17,8 +17,8 @@ class StoryAdapter(
         fun bind(story: ListStoryItem) {
             Glide.with(binding.root)
                 .load(story.photoUrl)
-                .into(binding.imgStory)
-            binding.tvStoryName.text = story.name
+                .into(binding.ivItemPhoto)
+            binding.tvItemName.text = story.name
             binding.tvStoryDescription.text = story.description
         }
     }
