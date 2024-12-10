@@ -13,3 +13,7 @@ fun parseErrorMessage(e: HttpException): String {
         "Terjadi kesalahan"
     }
 }
+
+interface LogoutCallback {
+    fun onLogout()
+}

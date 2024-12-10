@@ -3,14 +3,15 @@ package com.bangkit.storyapp.view
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.bangkit.storyapp.data.UserRepository
+import com.bangkit.storyapp.data.StoryRepository
 import com.bangkit.storyapp.di.Injection
+import com.bangkit.storyapp.view.home.HomeViewModel
 import com.bangkit.storyapp.view.login.LoginViewModel
 import com.bangkit.storyapp.view.main.MainViewModel
 import com.bangkit.storyapp.view.register.RegisterViewModel
 
 class ViewModelFactory(
-    private val repository: UserRepository
+    private val repository: StoryRepository
 ) : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
@@ -24,6 +25,9 @@ class ViewModelFactory(
             }
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
                 RegisterViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(HomeViewModel::class.java) -> {
+                HomeViewModel(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

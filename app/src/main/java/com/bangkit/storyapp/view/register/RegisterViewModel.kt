@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bangkit.storyapp.data.UserRepository
+import com.bangkit.storyapp.data.StoryRepository
 import com.bangkit.storyapp.data.api.RegisterResponse
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(
-    private val userRepository: UserRepository
+    private val storyRepository: StoryRepository
 ) : ViewModel() {
     private val _registerResult = MutableLiveData<Result<RegisterResponse>>()
     val registerResult: LiveData<Result<RegisterResponse>> = _registerResult
@@ -21,7 +21,7 @@ class RegisterViewModel(
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val response = userRepository.register(name, email, password)
+                val response = storyRepository.register(name, email, password)
                 if (response.error == false) {
                     _registerResult.value = Result.success(response)
                 } else {

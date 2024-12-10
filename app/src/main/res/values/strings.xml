@@ -5,11 +5,17 @@
     <string name="message_welcome_page">Mau sharing keseharianmu atau mau lihat kegiatan temanmu? Di StoryApp aja!</string>
     <string name="title_welcome_page">Selamat datang di Aplikasi Story App!</string>
     <string name="title_signup_page">Lengkapi data dirimu di bawah ini ya</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
+    <string name="email">Surel</string>
+    <string name="password">Kata Sandi</string>
     <string name="title_login_page">Silakan login terlebih dahulu!</string>
     <string name="message_login_page">Gunakan akun Anda yang telah terdaftar</string>
     <string name="name">Nama</string>
-    <string name="logout">Logout</string>
-    <string name="login_image_description">Login image</string>
+    <string name="logout">Keluar</string>
+    <string name="login_image_description">Gambar Login</string>
+    <string name="image_story_description">Gambar Story</string>
+    <string name="title_home">Beranda</string>
+    <string name="title_add">Tambah Story</string>
+    <string name="title_setting">Pengaturan</string>
+    <string name="set_language">Bahasa</string>
+    <string name="change_language">Ubah tampilan bahasa</string>
 </resources>

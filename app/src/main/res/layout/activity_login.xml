@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineHorizontal2"
         app:srcCompat="@drawable/ic_account_circle_24"
-        app:tint="@color/navy" />
+        app:tint="@color/md_theme_primary" />
 
     <TextView
         android:id="@+id/titleTextView"
@@ -29,7 +29,7 @@
         android:layout_marginEnd="32dp"
         android:alpha="0"
         android:text="@string/title_login_page"
-        android:textColor="@color/navy"
+        android:textColor="@color/md_theme_primary"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +46,7 @@
         android:layout_marginEnd="32dp"
         android:alpha="0"
         android:text="@string/message_login_page"
-        android:textColor="@color/black"
+        android:textColor="@color/md_theme_onSurfaceVariant"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -62,7 +62,7 @@
         android:layout_marginTop="24dp"
         android:alpha="0"
         android:text="@string/email"
-        android:textColor="@color/black"
+        android:textColor="@color/md_theme_onSurfaceVariant"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messageTextView"
         tools:alpha="100" />
@@ -99,7 +99,7 @@
         android:layout_marginTop="8dp"
         android:alpha="0"
         android:text="@string/password"
-        android:textColor="@color/black"
+        android:textColor="@color/md_theme_onSurfaceVariant"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailEditTextLayout"
         tools:alpha="100" />
@@ -137,7 +137,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:alpha="0"
-        android:backgroundTint="@color/navy"
+        android:backgroundTint="@color/md_theme_primary"
         android:text="@string/login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

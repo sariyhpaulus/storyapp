@@ -7,11 +7,18 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import com.bangkit.storyapp.R
 import com.bangkit.storyapp.databinding.ActivityMainBinding
+import com.bangkit.storyapp.utils.LogoutCallback
 import com.bangkit.storyapp.view.ViewModelFactory
 import com.bangkit.storyapp.view.landing.LandingPageActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), LogoutCallback {
     private val viewModel by viewModels<MainViewModel> {
         ViewModelFactory.getInstance(this)
     }
@@ -22,6 +29,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val navView: BottomNavigationView = binding.navView
+        val navController = findNavController(R.id.nav_host_fragment_activity_main)
+
         viewModel.getSession().observe(this) { user ->
             if (!user.isLogin) {
                 startActivity(Intent(this, LandingPageActivity::class.java))
@@ -29,8 +39,25 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.navigation_home,
+            )
+        )
+
+        navView.setupWithNavController(navController)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
+        navController.addOnDestinationChangedListener{ _, destination, _ ->
+            val title = when (destination.id) {
+                R.id.navigation_home -> getString(R.string.title_home)
+                R.id.navigation_setting -> getString(R.string.title_setting)
+                else -> getString(R.string.app_name)
+            }
+            supportActionBar?.title = title
+        }
+
         setupView()
-        setupAction()
     }
 
     private fun setupView() {
@@ -43,12 +70,9 @@ class MainActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
             )
         }
-        supportActionBar?.hide()
     }
 
-    private fun setupAction() {
-        binding.logoutButton.setOnClickListener {
-            viewModel.logout()
-        }
+    override fun onLogout() {
+        viewModel.logout()
     }
 }

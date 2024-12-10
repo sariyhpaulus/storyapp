@@ -3,13 +3,14 @@ package com.bangkit.storyapp.data
 import com.bangkit.storyapp.data.api.ApiService
 import com.bangkit.storyapp.data.api.LoginResponse
 import com.bangkit.storyapp.data.api.RegisterResponse
+import com.bangkit.storyapp.data.api.StoryResponse
 import com.bangkit.storyapp.data.pref.UserModel
 import com.bangkit.storyapp.data.pref.UserPreference
 import com.bangkit.storyapp.utils.parseErrorMessage
 import kotlinx.coroutines.flow.Flow
 import retrofit2.HttpException
 
-class UserRepository private constructor(
+class StoryRepository private constructor(
     private val userPreference: UserPreference,
     private val apiService: ApiService
 ) {
@@ -46,15 +47,27 @@ class UserRepository private constructor(
         userPreference.logout()
     }
 
+    suspend fun getStories(): StoryResponse {
+        return try {
+            apiService.getStories()
+        } catch (e: HttpException) {
+            val errorMessage = parseErrorMessage(e)
+            throw Exception(errorMessage)
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+
     companion object {
         @Volatile
-        private var instance: UserRepository? = null
+        private var instance: StoryRepository? = null
         fun getInstance(
             userPreference: UserPreference,
             apiService: ApiService
-        ): UserRepository =
+        ): StoryRepository =
             instance ?: synchronized(this) {
-                instance ?: UserRepository(userPreference, apiService)
+                instance ?: StoryRepository(userPreference, apiService)
             }.also { instance = it }
     }
 }
