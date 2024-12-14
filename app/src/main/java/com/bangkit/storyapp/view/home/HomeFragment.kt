@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bangkit.storyapp.R
 import com.bangkit.storyapp.databinding.FragmentHomeBinding
 import com.bangkit.storyapp.view.ViewModelFactory
-import com.bangkit.storyapp.view.adapter.StoryAdapter
+import com.bangkit.storyapp.view.StoryAdapter
+import com.bangkit.storyapp.view.detail.DetailStoryActivity
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -18,11 +19,7 @@ class HomeFragment : Fragment() {
         ViewModelFactory.getInstance(requireContext())
     }
 
-    private val adapter = StoryAdapter(
-//        onItemClick = { story ->
-//            // Handle click event
-//        }
-    )
+    private val adapter = StoryAdapter(::navigateToDetail)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,5 +59,9 @@ class HomeFragment : Fragment() {
         } else {
             View.GONE
         }
+    }
+
+    private fun navigateToDetail(id: String){
+        DetailStoryActivity.start(requireContext(), id)
     }
 }

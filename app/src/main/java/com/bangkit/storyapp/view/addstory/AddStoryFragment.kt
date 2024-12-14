@@ -18,7 +18,6 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bangkit.storyapp.R
 import com.bangkit.storyapp.databinding.FragmentAddStoryBinding
@@ -26,14 +25,10 @@ import com.bangkit.storyapp.utils.getImageUri
 import com.bangkit.storyapp.utils.reduceFileImage
 import com.bangkit.storyapp.utils.uriToFile
 import com.bangkit.storyapp.view.ViewModelFactory
-import com.bangkit.storyapp.view.landing.LandingPageActivity
-import com.google.gson.Gson
-import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.HttpException
 
 class AddStoryFragment : Fragment() {
     private var _binding: FragmentAddStoryBinding? = null
@@ -169,14 +164,14 @@ class AddStoryFragment : Fragment() {
 
     private fun showLoading(isLoading: Boolean) {
         _binding?.apply {
-            progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+            progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
             buttonAdd.isEnabled = !isLoading
         }
     }
 
     private fun showToast(message: String) {
         val toast = Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT)
-        toast.setGravity(Gravity.CENTER, 0, 0)
+        toast.setGravity(Gravity.BOTTOM, 0, 150)
         toast.show()
     }
 

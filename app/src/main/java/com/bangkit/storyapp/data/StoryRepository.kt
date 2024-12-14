@@ -2,6 +2,7 @@ package com.bangkit.storyapp.data
 
 import com.bangkit.storyapp.data.api.AddStoryResponse
 import com.bangkit.storyapp.data.api.ApiService
+import com.bangkit.storyapp.data.api.DetailStoryResponse
 import com.bangkit.storyapp.data.api.LoginResponse
 import com.bangkit.storyapp.data.api.RegisterResponse
 import com.bangkit.storyapp.data.api.StoryResponse
@@ -77,6 +78,16 @@ class StoryRepository private constructor(
         }
     }
 
+    suspend fun getDetailStory(id: String): DetailStoryResponse {
+        return try{
+            apiService.getDetailStory(id)
+        } catch (e: HttpException) {
+            val errorMessage = parseErrorMessage(e)
+            throw Exception(errorMessage)
+        } catch (e: Exception) {
+            throw e
+        }
+    }
 
     companion object {
         @Volatile

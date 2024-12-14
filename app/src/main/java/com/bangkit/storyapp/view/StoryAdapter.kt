@@ -1,4 +1,4 @@
-package com.bangkit.storyapp.view.adapter
+package com.bangkit.storyapp.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import com.bangkit.storyapp.databinding.ItemStoryBinding
 import com.bumptech.glide.Glide
 
 class StoryAdapter(
-//    private val onItemClick: (String) -> Unit
+    private val onItemClick: (String) -> Unit
 ): ListAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DIFF_CALLBACK) {
 
     class StoryViewHolder(private val binding: ItemStoryBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -26,7 +26,7 @@ class StoryAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): StoryAdapter.StoryViewHolder {
+    ): StoryViewHolder {
         val binding = ItemStoryBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -35,13 +35,12 @@ class StoryAdapter(
         return StoryViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: StoryAdapter.StoryViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val story = getItem(position)
         holder.bind(story)
-
-//        holder.itemView.setOnClickListener {
-//            story.id?.let { onItemClick(it) }
-//        }
+        holder.itemView.setOnClickListener {
+            story.id?.let { onItemClick(it) }
+        }
     }
 
     companion object{
