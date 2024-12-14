@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.bangkit.storyapp.R
 import com.bangkit.storyapp.databinding.ActivityLoginBinding
 import com.bangkit.storyapp.view.ViewModelFactory
 import com.bangkit.storyapp.view.main.MainActivity
@@ -64,21 +65,21 @@ class LoginActivity : AppCompatActivity() {
         viewModel.loginResult.observe(this) { result ->
             result.onSuccess { response ->
                 if (response.error == false && response.loginResult != null) {
-                    showSuccessDialog(response.loginResult.name ?: "Pengguna")
+                    showSuccessDialog(response.loginResult.name ?: getString(R.string.user))
                 } else {
-                    Toast.makeText(this, response.message ?: "Login Gagal", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, response.message ?: getString(R.string.login_failed), Toast.LENGTH_SHORT).show()
                 }
             }.onFailure { error ->
-                Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.error, error.message), Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun showSuccessDialog(name: String) {
         AlertDialog.Builder(this).apply {
-            setTitle("Login Berhasil")
-            setMessage("Selamat datang, $name!")
-            setPositiveButton("Lanjut") { _, _ ->
+            setTitle(getString(R.string.login_success))
+            setMessage(getString(R.string.welcome_user, name))
+            setPositiveButton(getString(R.string.next)) { _, _ ->
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)

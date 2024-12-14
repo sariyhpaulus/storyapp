@@ -1,19 +1,26 @@
 package com.bangkit.storyapp.data.api
 
+import android.content.Context
+import com.bangkit.storyapp.data.pref.UserPreference
+import com.bangkit.storyapp.data.pref.dataStore
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object ApiConfig {
-    fun getApiService(token: String): ApiService {
+object ApiConfig{
+    fun getApiService(context: Context): ApiService {
         val loggingInterceptor =
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
         val authInterceptor = Interceptor { chain ->
             val req = chain.request()
+            val pref = UserPreference.getInstance(context.dataStore)
+            val user = runBlocking { pref.getSession().first() }
             val requestHeaders = req.newBuilder()
-                .addHeader("Authorization", "Bearer $token")
+                .addHeader("Authorization", "Bearer ${user.token}")
                 .build()
             chain.proceed(requestHeaders)
         }

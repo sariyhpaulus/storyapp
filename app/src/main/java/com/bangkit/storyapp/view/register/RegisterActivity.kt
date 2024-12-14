@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.bangkit.storyapp.R
 import com.bangkit.storyapp.databinding.ActivityRegisterBinding
 import com.bangkit.storyapp.utils.parseErrorMessage
 import com.bangkit.storyapp.view.ViewModelFactory
@@ -68,13 +69,13 @@ class RegisterActivity : AppCompatActivity() {
                 if (response.error == false) {
                     showSuccessDialog(binding.emailEditText.text.toString())
                 } else {
-                    Toast.makeText(this, response.message ?: "Registrasi Gagal", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, response.message ?: getString(R.string.register_failed), Toast.LENGTH_SHORT).show()
                 }
             }.onFailure { error ->
                 val errorMessage = if (error is HttpException) {
                     parseErrorMessage(error)
                 } else {
-                    error.message ?: "Terjadi kesalahan"
+                    error.message ?: getString(R.string.error_failed)
                 }
                 Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
             }
@@ -83,9 +84,9 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun showSuccessDialog(toString: String) {
         AlertDialog.Builder(this).apply {
-            setTitle("Registrasi Berhasil")
-            setMessage("Akun Anda telah berhasil dibuat. Silakan login!")
-            setPositiveButton("Login") { _, _ ->
+            setTitle(getString(R.string.regist_success))
+            setMessage(getString(R.string.message_register_success))
+            setPositiveButton(getString(R.string.login)) { _, _ ->
                 val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
