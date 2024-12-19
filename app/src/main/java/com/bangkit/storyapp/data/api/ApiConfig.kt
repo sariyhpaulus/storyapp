@@ -1,6 +1,7 @@
 package com.bangkit.storyapp.data.api
 
 import android.content.Context
+import com.bangkit.storyapp.BuildConfig
 import com.bangkit.storyapp.data.pref.UserPreference
 import com.bangkit.storyapp.data.pref.dataStore
 import kotlinx.coroutines.flow.first
@@ -12,6 +13,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiConfig{
+    const val BASE_URL = BuildConfig.BASE_URL
+
     fun getApiService(context: Context): ApiService {
         val loggingInterceptor =
             HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -29,7 +32,7 @@ object ApiConfig{
             .addInterceptor(authInterceptor)
             .build()
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://story-api.dicoding.dev/v1/")
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

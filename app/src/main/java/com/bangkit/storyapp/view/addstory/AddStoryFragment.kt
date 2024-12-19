@@ -1,7 +1,6 @@
 package com.bangkit.storyapp.view.addstory
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.fragment.app.viewModels
@@ -43,9 +42,9 @@ class AddStoryFragment : Fragment() {
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                showToast("Permission request granted")
+                showToast(getString(R.string.permission_request_granted))
             } else {
-                showToast("Permission request denied")
+                showToast(getString(R.string.permission_request_denied))
             }
         }
 
