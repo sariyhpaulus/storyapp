@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bangkit.storyapp.data.StoryRepository
-import com.bangkit.storyapp.data.api.RegisterResponse
+import com.bangkit.storyapp.data.response.RegisterResponse
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(

@@ -39,4 +39,6 @@
     <string name="error">Error: %1$s</string>
     <string name="permission_request_granted">Permintaan izin diberikan</string>
     <string name="permission_request_denied">Permintaan izin ditolak</string>
+    <string name="maps">Peta</string>
+    <string name="title_maps">Lokasi Story</string>
 </resources>

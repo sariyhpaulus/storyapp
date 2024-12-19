@@ -1,8 +1,8 @@
-package com.bangkit.storyapp.data.api
+package com.bangkit.storyapp.data.response
 
 import com.google.gson.annotations.SerializedName
 
-data class AddStoryResponse(
+data class RegisterResponse(
 
 	@field:SerializedName("error")
 	val error: Boolean? = null,

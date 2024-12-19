@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bangkit.storyapp.data.api.ListStoryItem
+import com.bangkit.storyapp.data.response.ListStoryItem
 import com.bangkit.storyapp.databinding.ItemStoryBinding
 import com.bumptech.glide.Glide
 

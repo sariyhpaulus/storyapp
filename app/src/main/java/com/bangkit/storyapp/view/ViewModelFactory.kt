@@ -10,6 +10,7 @@ import com.bangkit.storyapp.view.detail.DetailStoryViewModel
 import com.bangkit.storyapp.view.home.HomeViewModel
 import com.bangkit.storyapp.view.login.LoginViewModel
 import com.bangkit.storyapp.view.main.MainViewModel
+import com.bangkit.storyapp.view.maps.MapsViewModel
 import com.bangkit.storyapp.view.register.RegisterViewModel
 
 class ViewModelFactory(
@@ -36,6 +37,9 @@ class ViewModelFactory(
             }
             modelClass.isAssignableFrom(DetailStoryViewModel::class.java) -> {
                 DetailStoryViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
+                MapsViewModel(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
         }

@@ -38,4 +38,8 @@
     <string name="error">Error: %1$s</string>
     <string name="permission_request_granted">Permission request granted</string>
     <string name="permission_request_denied">Permission request denied</string>
+    <string name="maps">Maps</string>
+    <string name="title_maps">Stories Location</string>
+    <string name="add_location">Add location   </string>
+    <string name="location_not_found">Location not found</string>
 </resources>

@@ -1,11 +1,11 @@
 package com.bangkit.storyapp.data
 
-import com.bangkit.storyapp.data.api.AddStoryResponse
+import com.bangkit.storyapp.data.response.AddStoryResponse
 import com.bangkit.storyapp.data.api.ApiService
-import com.bangkit.storyapp.data.api.DetailStoryResponse
-import com.bangkit.storyapp.data.api.LoginResponse
-import com.bangkit.storyapp.data.api.RegisterResponse
-import com.bangkit.storyapp.data.api.StoryResponse
+import com.bangkit.storyapp.data.response.DetailStoryResponse
+import com.bangkit.storyapp.data.response.LoginResponse
+import com.bangkit.storyapp.data.response.RegisterResponse
+import com.bangkit.storyapp.data.response.StoryResponse
 import com.bangkit.storyapp.data.pref.UserModel
 import com.bangkit.storyapp.data.pref.UserPreference
 import com.bangkit.storyapp.utils.parseErrorMessage
@@ -65,8 +65,8 @@ class StoryRepository private constructor(
     suspend fun addStory(
         description: RequestBody,
         image: MultipartBody.Part,
-        lat: Float?,
-        lon: Float?
+        lat: Double?,
+        lon: Double?
     ): AddStoryResponse {
         return try {
             apiService.addStory(description, image, lat, lon)
@@ -81,6 +81,17 @@ class StoryRepository private constructor(
     suspend fun getDetailStory(id: String): DetailStoryResponse {
         return try{
             apiService.getDetailStory(id)
+        } catch (e: HttpException) {
+            val errorMessage = parseErrorMessage(e)
+            throw Exception(errorMessage)
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    suspend fun getStoriesWithLocation(location: Int = 1): StoryResponse {
+        return try {
+            apiService.getStoriesWithLocation(location)
         } catch (e: HttpException) {
             val errorMessage = parseErrorMessage(e)
             throw Exception(errorMessage)

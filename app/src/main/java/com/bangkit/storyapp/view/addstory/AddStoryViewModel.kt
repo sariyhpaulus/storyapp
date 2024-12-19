@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bangkit.storyapp.data.StoryRepository
-import com.bangkit.storyapp.data.api.AddStoryResponse
+import com.bangkit.storyapp.data.response.AddStoryResponse
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -22,8 +22,8 @@ class AddStoryViewModel(
     fun uploadStory(
         description: RequestBody,
         imageMultipart: MultipartBody.Part,
-        lat: Float? = null,
-        lon: Float? = null
+        lat: Double? = null,
+        lon: Double? = null
     ) {
         viewModelScope.launch {
             _isLoading.value = true

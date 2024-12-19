@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.bangkit.storyapp.data.StoryRepository
-import com.bangkit.storyapp.data.api.LoginResponse
+import com.bangkit.storyapp.data.response.LoginResponse
 import com.bangkit.storyapp.data.pref.UserModel
 import kotlinx.coroutines.launch
 

@@ -43,7 +43,8 @@ class MainActivity : AppCompatActivity(), LogoutCallback {
             setOf(
                 R.id.navigation_home,
                 R.id.navigation_add_story,
-                R.id.navigation_setting
+                R.id.navigation_setting,
+                R.id.navigation_maps
             )
         )
 
@@ -55,6 +56,7 @@ class MainActivity : AppCompatActivity(), LogoutCallback {
                 R.id.navigation_home -> getString(R.string.title_home)
                 R.id.navigation_add_story -> getString(R.string.title_add)
                 R.id.navigation_setting -> getString(R.string.title_setting)
+                R.id.navigation_maps -> getString(R.string.title_maps)
                 else -> getString(R.string.app_name)
             }
             supportActionBar?.title = title

@@ -1,16 +1,16 @@
-package com.bangkit.storyapp.data.api
+package com.bangkit.storyapp.data.response
 
 import com.google.gson.annotations.SerializedName
 
 data class StoryResponse(
 
-	@field:SerializedName("listStory")
+    @field:SerializedName("listStory")
 	val listStory: List<ListStoryItem?>? = emptyList(),
 
-	@field:SerializedName("error")
+    @field:SerializedName("error")
 	val error: Boolean? = null,
 
-	@field:SerializedName("message")
+    @field:SerializedName("message")
 	val message: String? = null
 )
 

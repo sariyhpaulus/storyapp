@@ -1,6 +1,5 @@
-package com.bangkit.storyapp.view.home
+package com.bangkit.storyapp.view.maps
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,8 +7,8 @@ import com.bangkit.storyapp.data.StoryRepository
 import com.bangkit.storyapp.data.response.ListStoryItem
 import kotlinx.coroutines.launch
 
-class HomeViewModel(
-     private val storyRepository: StoryRepository
+class MapsViewModel (
+    private val storyRepository: StoryRepository
 ) : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: MutableLiveData<Boolean> = _isLoading
@@ -29,7 +28,7 @@ class HomeViewModel(
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val response = storyRepository.getStories()
+                val response = storyRepository.getStoriesWithLocation()
                 _listStory.value = response.listStory?.filterNotNull() ?: emptyList()
             } catch (e: Exception) {
                 _listStory.value = emptyList()

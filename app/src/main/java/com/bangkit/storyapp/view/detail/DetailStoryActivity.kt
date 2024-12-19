@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.bangkit.storyapp.data.api.Story
+import com.bangkit.storyapp.data.response.Story
 import com.bangkit.storyapp.databinding.ActivityDetailBinding
 import com.bangkit.storyapp.view.ViewModelFactory
 import com.bumptech.glide.Glide

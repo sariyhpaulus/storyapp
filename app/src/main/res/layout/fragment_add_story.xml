@@ -67,6 +67,18 @@
                 app:layout_constraintStart_toEndOf="@+id/cameraButton"
                 app:layout_constraintTop_toTopOf="@+id/cameraButton" />
 
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/switch_location"
+                android:text="@string/add_location"
+                app:layout_constraintTop_toBottomOf="@+id/cameraButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textField"
                 android:layout_width="0dp"
@@ -76,7 +88,7 @@
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cameraButton">
+                app:layout_constraintTop_toBottomOf="@+id/switch_location">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/ed_add_description"

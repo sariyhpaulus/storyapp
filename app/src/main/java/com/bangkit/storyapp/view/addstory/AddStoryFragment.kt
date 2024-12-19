@@ -2,6 +2,7 @@ package com.bangkit.storyapp.view.addstory
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import androidx.fragment.app.viewModels
 import android.os.Bundle
@@ -24,6 +25,11 @@ import com.bangkit.storyapp.utils.getImageUri
 import com.bangkit.storyapp.utils.reduceFileImage
 import com.bangkit.storyapp.utils.uriToFile
 import com.bangkit.storyapp.view.ViewModelFactory
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.LatLngBounds
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -36,6 +42,8 @@ class AddStoryFragment : Fragment() {
     }
 
     private var currentImageUri: Uri? = null
+    private var currentLocation: Location? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val requestPermissionLauncher =
         registerForActivityResult(
@@ -54,6 +62,26 @@ class AddStoryFragment : Fragment() {
             REQUIRED_PERMISSION
         ) == PackageManager.PERMISSION_GRANTED
 
+
+    private fun getMyLocation() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    currentLocation = location
+                    Log.d("Location", "getMyLocation: $location")
+                }
+        } else {
+            _binding?.switchLocation?.isChecked ?: false
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+    }
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,6 +94,8 @@ class AddStoryFragment : Fragment() {
         val binding = FragmentAddStoryBinding.bind(view)
         _binding = binding
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
         if (!allPermissionsGranted()) {
             requestPermissionLauncher.launch(REQUIRED_PERMISSION)
         }
@@ -73,6 +103,12 @@ class AddStoryFragment : Fragment() {
         binding.galleryButton.setOnClickListener { startGallery() }
         binding.cameraButton.setOnClickListener { startCamera() }
         binding.buttonAdd.setOnClickListener { uploadImage() }
+
+        binding.switchLocation.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                getMyLocation()
+            }
+        }
 
         setupViewModel()
     }
@@ -134,7 +170,9 @@ class AddStoryFragment : Fragment() {
 
             viewModel.uploadStory(
                 description = requestBody,
-                imageMultipart = multipartBody
+                imageMultipart = multipartBody,
+                lat = if(_binding?.switchLocation?.isChecked == true) currentLocation?.latitude else null,
+                lon = if(_binding?.switchLocation?.isChecked == true) currentLocation?.longitude else null
             )
 
         } ?: showToast(getString(R.string.empty_image_warning))
@@ -174,6 +212,10 @@ class AddStoryFragment : Fragment() {
         toast.show()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     companion object {
         private const val REQUIRED_PERMISSION = Manifest.permission.CAMERA

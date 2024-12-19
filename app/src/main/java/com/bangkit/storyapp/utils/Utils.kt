@@ -12,7 +12,7 @@ import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import androidx.exifinterface.media.ExifInterface
 import com.bangkit.storyapp.BuildConfig
-import com.bangkit.storyapp.data.api.ErrorResponse
+import com.bangkit.storyapp.data.response.ErrorResponse
 import com.google.gson.Gson
 import retrofit2.HttpException
 import java.io.ByteArrayOutputStream
