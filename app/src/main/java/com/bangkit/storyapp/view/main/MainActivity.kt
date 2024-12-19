@@ -29,8 +29,15 @@ class MainActivity : AppCompatActivity(), LogoutCallback {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val toolbar = binding.toolbar
+        setSupportActionBar(toolbar)
+
+        toolbar.title = getString(R.string.app_name)
+
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
+
+        navView.setupWithNavController(navController)
 
         viewModel.getSession().observe(this) { user ->
             if (!user.isLogin) {
@@ -48,19 +55,18 @@ class MainActivity : AppCompatActivity(), LogoutCallback {
             )
         )
 
-        navView.setupWithNavController(navController)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        navController.addOnDestinationChangedListener{ _, destination, _ ->
-            val title = when (destination.id) {
-                R.id.navigation_home -> getString(R.string.title_home)
-                R.id.navigation_add_story -> getString(R.string.title_add)
-                R.id.navigation_setting -> getString(R.string.title_setting)
-                R.id.navigation_maps -> getString(R.string.title_maps)
-                else -> getString(R.string.app_name)
-            }
-            supportActionBar?.title = title
-        }
+//        navController.addOnDestinationChangedListener{ _, destination, _ ->
+//            val title = when (destination.id) {
+//                R.id.navigation_home -> getString(R.string.title_home)
+//                R.id.navigation_add_story -> getString(R.string.title_add)
+//                R.id.navigation_setting -> getString(R.string.title_setting)
+//                R.id.navigation_maps -> getString(R.string.title_maps)
+//                else -> getString(R.string.app_name)
+//            }
+//            supportActionBar?.title = title
+//        }
 
         setupView()
     }
