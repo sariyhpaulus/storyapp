@@ -1,9 +1,11 @@
 package com.bangkit.storyapp.view.home
 
-import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.bangkit.storyapp.data.StoryRepository
 import com.bangkit.storyapp.data.response.ListStoryItem
 import kotlinx.coroutines.launch
@@ -14,8 +16,8 @@ class HomeViewModel(
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: MutableLiveData<Boolean> = _isLoading
 
-    private val _listStory = MutableLiveData<List<ListStoryItem>>()
-    val listStory: MutableLiveData<List<ListStoryItem>> = _listStory
+    private val _listStory = MutableLiveData<PagingData<ListStoryItem>>()
+    val listStory: LiveData<PagingData<ListStoryItem>> = _listStory
 
     fun getStoriesWithToken() {
         viewModelScope.launch {
@@ -27,15 +29,11 @@ class HomeViewModel(
 
     private fun fetchListStory() {
         viewModelScope.launch {
-            _isLoading.value = true
-            try {
-                val response = storyRepository.getStories()
-                _listStory.value = response.listStory?.filterNotNull() ?: emptyList()
-            } catch (e: Exception) {
-                _listStory.value = emptyList()
-            } finally {
-                _isLoading.value = false
-            }
+            storyRepository.getStories()
+                .cachedIn(viewModelScope)
+                .collect { pagingData ->
+                    _listStory.postValue(pagingData)
+                }
         }
     }
 }

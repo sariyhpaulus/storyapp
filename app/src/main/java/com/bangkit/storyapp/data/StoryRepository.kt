@@ -1,5 +1,8 @@
 package com.bangkit.storyapp.data
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.bangkit.storyapp.data.response.AddStoryResponse
 import com.bangkit.storyapp.data.api.ApiService
 import com.bangkit.storyapp.data.response.DetailStoryResponse
@@ -8,6 +11,7 @@ import com.bangkit.storyapp.data.response.RegisterResponse
 import com.bangkit.storyapp.data.response.StoryResponse
 import com.bangkit.storyapp.data.pref.UserModel
 import com.bangkit.storyapp.data.pref.UserPreference
+import com.bangkit.storyapp.data.response.ListStoryItem
 import com.bangkit.storyapp.utils.parseErrorMessage
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
@@ -51,15 +55,16 @@ class StoryRepository private constructor(
         userPreference.logout()
     }
 
-    suspend fun getStories(): StoryResponse {
-        return try {
-            apiService.getStories()
-        } catch (e: HttpException) {
-            val errorMessage = parseErrorMessage(e)
-            throw Exception(errorMessage)
-        } catch (e: Exception) {
-            throw e
-        }
+    fun getStories(): Flow<PagingData<ListStoryItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                StoryPagingSource(apiService)
+            }
+        ).flow
     }
 
     suspend fun addStory(

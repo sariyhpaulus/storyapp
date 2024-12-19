@@ -42,4 +42,5 @@
     <string name="title_maps">Stories Location</string>
     <string name="add_location">Add location   </string>
     <string name="location_not_found">Location not found</string>
+    <string name="retry">Try again</string>
 </resources>

@@ -2,8 +2,8 @@ package com.bangkit.storyapp.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bangkit.storyapp.data.response.ListStoryItem
 import com.bangkit.storyapp.databinding.ItemStoryBinding
@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 
 class StoryAdapter(
     private val onItemClick: (String) -> Unit
-): ListAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DIFF_CALLBACK) {
+): PagingDataAdapter<ListStoryItem, StoryAdapter.StoryViewHolder>(DIFF_CALLBACK) {
 
     class StoryViewHolder(private val binding: ItemStoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(story: ListStoryItem) {
@@ -37,9 +37,11 @@ class StoryAdapter(
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
         val story = getItem(position)
-        holder.bind(story)
-        holder.itemView.setOnClickListener {
-            story.id?.let { onItemClick(it) }
+        if (story != null) {
+            holder.bind(story)
+            holder.itemView.setOnClickListener {
+                onItemClick(story.id)
+            }
         }
     }
 

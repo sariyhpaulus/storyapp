@@ -2,6 +2,7 @@ package com.bangkit.storyapp.view.home
 
 import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bangkit.storyapp.R
 import com.bangkit.storyapp.databinding.FragmentHomeBinding
+import com.bangkit.storyapp.view.LoadingStateAdapter
 import com.bangkit.storyapp.view.ViewModelFactory
 import com.bangkit.storyapp.view.StoryAdapter
 import com.bangkit.storyapp.view.detail.DetailStoryActivity
@@ -33,9 +35,11 @@ class HomeFragment : Fragment() {
         val binding = FragmentHomeBinding.bind(view)
         _binding = binding
 
-        _binding?.rvStory?.apply {
-            layoutManager = LinearLayoutManager(requireActivity())
-            adapter = this@HomeFragment.adapter
+        with(binding) {
+            rvStory.layoutManager = LinearLayoutManager(requireContext())
+            rvStory.adapter = adapter.withLoadStateFooter(
+                footer = LoadingStateAdapter { adapter.retry() }
+            )
         }
 
         with(viewModel) {
@@ -44,11 +48,9 @@ class HomeFragment : Fragment() {
             isLoading.observe(viewLifecycleOwner) { isLoading ->
                 showLoading(isLoading)
             }
-
-            listStory.observe(viewLifecycleOwner) { stories ->
-                adapter.submitList(stories)
-                binding.rvStory.adapter = adapter
-                binding.rvStory.visibility = View.VISIBLE
+            listStory.observe(viewLifecycleOwner) {
+                Log.d("HomeFragment", "List Story: $it")
+                adapter.submitData(lifecycle, it)
             }
         }
     }
@@ -59,6 +61,11 @@ class HomeFragment : Fragment() {
         } else {
             View.GONE
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun navigateToDetail(id: String){
