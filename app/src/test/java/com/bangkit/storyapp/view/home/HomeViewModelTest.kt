@@ -1,6 +1,8 @@
 package com.bangkit.storyapp.view.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
 import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.PagingData
 import androidx.paging.PagingSource
@@ -9,6 +11,7 @@ import androidx.recyclerview.widget.ListUpdateCallback
 import com.bangkit.storyapp.DataDummy
 import com.bangkit.storyapp.MainDispatcherRule
 import com.bangkit.storyapp.data.database.StoryRepository
+import com.bangkit.storyapp.data.pref.UserModel
 import com.bangkit.storyapp.data.response.ListStoryItem
 import com.bangkit.storyapp.getOrAwaitValue
 import com.bangkit.storyapp.view.StoryAdapter
@@ -42,36 +45,30 @@ class HomeViewModelTest {
 
     @Before
     fun setUp() {
+        Mockito.`when`(storyRepository.getSession()).thenReturn(flowOf(UserModel("email@example.com", "token", true)))
         homeViewModel = HomeViewModel(storyRepository)
     }
 
     @Test
     fun `when Get Story Should Not Null and Return Data`() = runTest {
-        val dummyStories = DataDummy.generateDummyStoryResponse()
-        val data: PagingData<ListStoryItem> = StoryPagingSource.snapshot(dummyStories)
-
+        val dummyStory = DataDummy.generateDummyStoryResponse()
+        val data: PagingData<ListStoryItem> = StoryPagingSource.snapshot(dummyStory)
+        val expectedStories = MutableLiveData<PagingData<ListStoryItem>>()
+        expectedStories.value = data
         Mockito.`when`(storyRepository.getStories()).thenReturn(flowOf(data))
 
-        homeViewModel.getStoriesWithToken()
-
-        val actualStory = homeViewModel.listStory.getOrAwaitValue()
+        val actualStories: PagingData<ListStoryItem> = homeViewModel.listStory.getOrAwaitValue()
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = StoryAdapter.DIFF_CALLBACK,
             updateCallback = noopListUpdateCallback,
-            workerDispatcher = Dispatchers.Main
+            workerDispatcher = Dispatchers.Main,
         )
+        differ.submitData(actualStories)
 
-        differ.submitData(actualStory)
-
-        // Tunggu sampai differ selesai memproses data
-        advanceUntilIdle()
-
-        // Verifikasi hasil
         Assert.assertNotNull(differ.snapshot())
-        Assert.assertEquals(dummyStories.size, differ.snapshot().size)
-        Assert.assertEquals(dummyStories[0].id, differ.snapshot()[0]?.id)
-        Assert.assertEquals(dummyStories[0].description, differ.snapshot()[0]?.description)
+        Assert.assertEquals(dummyStory.size, differ.snapshot().size)
+        Assert.assertEquals(dummyStory[0], differ.snapshot()[0])
     }
 
     @Test
@@ -92,15 +89,12 @@ class HomeViewModelTest {
 
         differ.submitData(actualStory)
 
-        // Tunggu sampai differ selesai memproses data
         advanceUntilIdle()
 
-        // Verifikasi hasil
         Assert.assertEquals(0, differ.snapshot().size)
     }
 }
 
-// Helper class untuk PagingSource
 class StoryPagingSource : PagingSource<Int, ListStoryItem>() {
     companion object {
         fun snapshot(items: List<ListStoryItem>): PagingData<ListStoryItem> {
@@ -119,7 +113,6 @@ class StoryPagingSource : PagingSource<Int, ListStoryItem>() {
     }
 }
 
-// Helper untuk ListUpdateCallback
 val noopListUpdateCallback = object : ListUpdateCallback {
     override fun onChanged(position: Int, count: Int, payload: Any?) {}
     override fun onMoved(fromPosition: Int, toPosition: Int) {}
