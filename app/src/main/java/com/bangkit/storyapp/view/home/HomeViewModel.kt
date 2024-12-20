@@ -1,5 +1,6 @@
 package com.bangkit.storyapp.view.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -32,6 +33,7 @@ class HomeViewModel(
             storyRepository.getStories()
                 .cachedIn(viewModelScope)
                 .collect { pagingData ->
+                    Log.d("HomeViewModel", "fetchListStory: $pagingData")
                     _listStory.postValue(pagingData)
                 }
         }
