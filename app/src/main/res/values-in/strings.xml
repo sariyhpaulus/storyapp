@@ -41,4 +41,7 @@
     <string name="permission_request_denied">Permintaan izin ditolak</string>
     <string name="maps">Peta</string>
     <string name="title_maps">Lokasi Story</string>
+    <string name="add_location">Tambahkan lokasi</string>
+    <string name="location_not_found">Lokasi tidak ditemukan</string>
+    <string name="retry">Coba lagi</string>
 </resources>

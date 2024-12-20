@@ -1,4 +1,4 @@
-package com.bangkit.storyapp.data
+package com.bangkit.storyapp.data.database
 
 import android.content.Context
 import androidx.room.Database
@@ -6,9 +6,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.bangkit.storyapp.data.response.ListStoryItem
 
-@Database(entities = [ListStoryItem::class], version = 1, exportSchema = false)
+@Database(entities = [ListStoryItem::class, RemoteKeys::class], version = 2, exportSchema = false)
 abstract class StoryDatabase: RoomDatabase() {
     abstract fun storyDao(): StoryDao
+    abstract fun remoteKeysDao(): RemoteKeysDao
 
     companion object {
         @Volatile

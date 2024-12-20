@@ -37,7 +37,8 @@ class HomeFragment : Fragment() {
 
         with(binding) {
             rvStory.layoutManager = LinearLayoutManager(requireContext())
-            rvStory.adapter = adapter.withLoadStateFooter(
+            rvStory.adapter = adapter.withLoadStateHeaderAndFooter(
+                header = LoadingStateAdapter { adapter.retry() },
                 footer = LoadingStateAdapter { adapter.retry() }
             )
         }

@@ -1,4 +1,4 @@
-package com.bangkit.storyapp.data
+package com.bangkit.storyapp.data.database
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
@@ -14,4 +14,7 @@ interface StoryDao {
 
     @Query("SELECT * FROM listStoryItem")
     fun getAllStory(): PagingSource<Int, ListStoryItem>
+
+    @Query("DELETE FROM listStoryItem")
+    suspend fun clearAll()
 }

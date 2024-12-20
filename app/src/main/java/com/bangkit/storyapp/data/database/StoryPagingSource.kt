@@ -1,4 +1,4 @@
-package com.bangkit.storyapp.data
+package com.bangkit.storyapp.data.database
 
 import android.util.Log
 import androidx.paging.PagingSource

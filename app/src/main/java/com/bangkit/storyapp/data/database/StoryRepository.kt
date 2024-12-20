@@ -1,5 +1,6 @@
-package com.bangkit.storyapp.data
+package com.bangkit.storyapp.data.database
 
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -19,6 +20,7 @@ import okhttp3.RequestBody
 import retrofit2.HttpException
 
 class StoryRepository private constructor(
+    private val database: StoryDatabase,
     private val userPreference: UserPreference,
     private val apiService: ApiService
 ) {
@@ -56,13 +58,16 @@ class StoryRepository private constructor(
     }
 
     fun getStories(): Flow<PagingData<ListStoryItem>> {
+        @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
                 pageSize = 20,
                 enablePlaceholders = false
             ),
+            remoteMediator = StoryRemoteMediator(database, apiService),
             pagingSourceFactory = {
-                StoryPagingSource(apiService)
+//                StoryPagingSource(apiService)
+                database.storyDao().getAllStory()
             }
         ).flow
     }
@@ -109,11 +114,12 @@ class StoryRepository private constructor(
         @Volatile
         private var instance: StoryRepository? = null
         fun getInstance(
+            database: StoryDatabase,
             userPreference: UserPreference,
             apiService: ApiService
         ): StoryRepository =
             instance ?: synchronized(this) {
-                instance ?: StoryRepository(userPreference, apiService)
+                instance ?: StoryRepository( database, userPreference, apiService)
             }.also { instance = it }
     }
 }

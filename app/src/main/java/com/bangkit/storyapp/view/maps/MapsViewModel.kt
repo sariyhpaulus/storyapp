@@ -3,7 +3,7 @@ package com.bangkit.storyapp.view.maps
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bangkit.storyapp.data.StoryRepository
+import com.bangkit.storyapp.data.database.StoryRepository
 import com.bangkit.storyapp.data.response.ListStoryItem
 import kotlinx.coroutines.launch
 

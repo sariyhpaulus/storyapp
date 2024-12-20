@@ -3,7 +3,7 @@ package com.bangkit.storyapp.view
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.bangkit.storyapp.data.StoryRepository
+import com.bangkit.storyapp.data.database.StoryRepository
 import com.bangkit.storyapp.di.Injection
 import com.bangkit.storyapp.view.addstory.AddStoryViewModel
 import com.bangkit.storyapp.view.detail.DetailStoryViewModel
