@@ -1,9 +1,11 @@
 package com.bangkit.storyapp.data.database
 
+import androidx.lifecycle.LiveData
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.bangkit.storyapp.data.response.AddStoryResponse
 import com.bangkit.storyapp.data.api.ApiService
 import com.bangkit.storyapp.data.response.DetailStoryResponse
@@ -57,7 +59,7 @@ class StoryRepository private constructor(
         userPreference.logout()
     }
 
-    fun getStories(): Flow<PagingData<ListStoryItem>> {
+    fun getStories(): LiveData<PagingData<ListStoryItem>> {
         @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
@@ -68,7 +70,7 @@ class StoryRepository private constructor(
             pagingSourceFactory = {
                 database.storyDao().getAllStory()
             }
-        ).flow
+        ).liveData
     }
 
     suspend fun addStory(

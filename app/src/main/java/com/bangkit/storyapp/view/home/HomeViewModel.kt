@@ -29,13 +29,12 @@ class HomeViewModel(
     }
 
     private fun fetchListStory() {
+        _isLoading.value = true
         viewModelScope.launch {
-            storyRepository.getStories()
-                .cachedIn(viewModelScope)
-                .collect { pagingData ->
-                    Log.d("HomeViewModel", "fetchListStory: $pagingData")
-                    _listStory.postValue(pagingData)
-                }
+            storyRepository.getStories().observeForever { pagingData ->
+                _listStory.value = pagingData
+                _isLoading.value = false
+            }
         }
     }
 }

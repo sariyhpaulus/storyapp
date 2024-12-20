@@ -20,7 +20,4 @@ object DataDummy {
         }
         return items
     }
-
-
-
 }

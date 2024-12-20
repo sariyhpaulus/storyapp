@@ -31,7 +31,7 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class HomeViewModelTest {
+class StoryViewModelTest {
 
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
@@ -41,23 +41,23 @@ class HomeViewModelTest {
 
     @Mock
     private lateinit var storyRepository: StoryRepository
-    private lateinit var homeViewModel: HomeViewModel
-
-    @Before
-    fun setUp() {
-        Mockito.`when`(storyRepository.getSession()).thenReturn(flowOf(UserModel("email@example.com", "token", true)))
-        homeViewModel = HomeViewModel(storyRepository)
-    }
 
     @Test
-    fun `when Get Story Should Not Null and Return Data`() = runTest {
-        val dummyStory = DataDummy.generateDummyStoryResponse()
-        val data: PagingData<ListStoryItem> = StoryPagingSource.snapshot(dummyStory)
+    fun `when Get Stories Should Not Null and Return Data`() = runTest {
+        val dummyStories = DataDummy.generateDummyStoryResponse()
+        val data: PagingData<ListStoryItem> = StoryPagingSource.snapshot(dummyStories)
         val expectedStories = MutableLiveData<PagingData<ListStoryItem>>()
         expectedStories.value = data
-        Mockito.`when`(storyRepository.getStories()).thenReturn(flowOf(data))
 
-        val actualStories: PagingData<ListStoryItem> = homeViewModel.listStory.getOrAwaitValue()
+        val userModel = UserModel("test@test.com", "dummy-token", true)
+        val sessionFlow = flowOf(userModel)
+        Mockito.`when`(storyRepository.getSession()).thenReturn(sessionFlow)
+
+        Mockito.`when`(storyRepository.getStories()).thenReturn(expectedStories)
+
+        val homeViewModel = HomeViewModel(storyRepository)
+        homeViewModel.getStoriesWithToken()
+        val actualStories = homeViewModel.listStory.getOrAwaitValue()
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = StoryAdapter.DIFF_CALLBACK,
@@ -67,31 +67,42 @@ class HomeViewModelTest {
         differ.submitData(actualStories)
 
         Assert.assertNotNull(differ.snapshot())
-        Assert.assertEquals(dummyStory.size, differ.snapshot().size)
-        Assert.assertEquals(dummyStory[0], differ.snapshot()[0])
+        Assert.assertEquals(dummyStories.size, differ.snapshot().size)
+        Assert.assertEquals(dummyStories[0], differ.snapshot()[0])
     }
 
     @Test
-    fun `when Get Story Empty Should Return No Data`() = runTest {
+    fun `when Get Stories Empty Should Return No Data`() = runTest {
         val data: PagingData<ListStoryItem> = PagingData.from(emptyList())
-        Mockito.`when`(storyRepository.getStories()).thenReturn(flowOf(data))
+        val expectedStories = MutableLiveData<PagingData<ListStoryItem>>()
+        expectedStories.value = data
 
-        // Panggil fungsi untuk memulai fetch
+        val userModel = UserModel("test@test.com", "dummy-token", true)
+        val sessionFlow = flowOf(userModel)
+        Mockito.`when`(storyRepository.getSession()).thenReturn(sessionFlow)
+
+        Mockito.`when`(storyRepository.getStories()).thenReturn(expectedStories)
+
+        val homeViewModel = HomeViewModel(storyRepository)
         homeViewModel.getStoriesWithToken()
-
-        val actualStory = homeViewModel.listStory.getOrAwaitValue()
+        val actualStories = homeViewModel.listStory.getOrAwaitValue()
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = StoryAdapter.DIFF_CALLBACK,
             updateCallback = noopListUpdateCallback,
-            workerDispatcher = Dispatchers.Main
+            workerDispatcher = Dispatchers.Main,
         )
 
-        differ.submitData(actualStory)
-
-        advanceUntilIdle()
+        differ.submitData(actualStories)
 
         Assert.assertEquals(0, differ.snapshot().size)
+    }
+
+    private val noopListUpdateCallback = object : ListUpdateCallback {
+        override fun onInserted(position: Int, count: Int) {}
+        override fun onRemoved(position: Int, count: Int) {}
+        override fun onMoved(fromPosition: Int, toPosition: Int) {}
+        override fun onChanged(position: Int, count: Int, payload: Any?) {}
     }
 }
 
@@ -102,20 +113,11 @@ class StoryPagingSource : PagingSource<Int, ListStoryItem>() {
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, ListStoryItem>): Int? = null
+    override fun getRefreshKey(state: PagingState<Int, ListStoryItem>): Int? {
+        return null
+    }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ListStoryItem> {
-        return LoadResult.Page(
-            data = emptyList(),
-            prevKey = null,
-            nextKey = null
-        )
+        return LoadResult.Page(emptyList(), prevKey = null, nextKey = null)
     }
-}
-
-val noopListUpdateCallback = object : ListUpdateCallback {
-    override fun onChanged(position: Int, count: Int, payload: Any?) {}
-    override fun onMoved(fromPosition: Int, toPosition: Int) {}
-    override fun onInserted(position: Int, count: Int) {}
-    override fun onRemoved(position: Int, count: Int) {}
 }
